@@ -5,61 +5,221 @@ info:
     Intro au dev d'un back-end REST en Java avec Spring et OpenAPI
   version: 2024.0.0
 servers:
-  - url: "http://localhost:8080/api"
+  - url: "http://localhost:8080/"
 
-tags: # Some annotations used to document the route descriptions (optional)
+tags:
   - name: hello
     description: Démo
   - name: todo
-    description: Les todos
+    description: Gestion des tâches Todo
+  - name: todolist
+    description: Gestion des listes de tâches
+
 paths:
-    /v1/public/hello/helloworld:
-        get:
-            tags:
-                - hello
-            responses:
-              '200':
-                description: c'est bon
-    /v1/public/hello/helloworld2:
-        get:
-            tags:
-                - hello
-            responses:
-              '200':
-                description: c'est bon
-                content:
-                  application/json:
-                    schema:
-                      $ref: '#/components/schemas/Message'
-    /v1/public/hello/txt:
-        post:
-          tags:
-              - hello
-          requestBody:
-            required: true
-            content:
-              text/plain:
-                schema:
-                  type: string
-                  examples: ["txt example"]
-          responses:
-            '200':
-              description: Successful operation
-        get:
-            tags:
-                - hello
-            responses:
-              '200':
-                description: c'est bon
-                content:
-                  application/json:
-                    schema:
-                      type: array
+  /v1/public/hello/helloworld:
+    get:
+      tags:
+        - hello
+      responses:
+        '200':
+          description: c'est bon
+
+  /v1/public/todo/todo/{id}:
+    get:
+      tags:
+        - todo
+      summary: Retourne une instance d'un objet Todo
+      description: Retourne un objet Todo existant en fonction de l'id
+      operationId: getTodo
+      parameters:
+        - name: id
+          in: path
+          description: L'ID du Todo à récupérer
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Opération réussie
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Todo'
+        '400':
+          description: ID invalide fourni
+
+    delete:
+      tags:
+        - todo
+      summary: Retourne une instance d'un objet Todo
+      description: Retourne un objet Todo existant en fonction de l'id
+      operationId: deleteTodo
+      parameters:
+        - name: id
+          in: path
+          description: L'ID du Todo à supprimer
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: Opération réussie
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Todo'
+        '400':
+          description: ID invalide fourni
+
+
+
+  /v1/public/todo/todo:
+    post:
+      tags:
+        - todo
+      summary: adds new Todo Task
+      operationId: addTodo
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TodoInput'
+        required: true
+      responses:
+        '200':
+          description: Opération réussie
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Todo'
+        '405':
+          description: Entrée invalide
+    put:
+      tags:
+        - todo
+      summary: adds new Todo Task
+      operationId: putTodo
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TodoInput'
+        required: true
+      responses:
+        '200':
+          description: Opération réussie
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Todo'
+        '405':
+          description: Entrée invalide
+    patch:
+      tags:
+        - todo
+      summary: adds new Todo Task
+      operationId: patchTodo
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TodoInput'
+        required: true
+      responses:
+        '200':
+          description: Opération réussie
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Todo'
+        '405':
+          description: Entrée invalide
+
+
+  /api/v2/public/todolist:
+    post:
+      tags:
+        - todolist
+      summary: Crée une TodoList vide
+      operationId: addTodoList
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TodoListInput'
+        required: true
+      responses:
+        '200':
+          description: TodoList créée avec succès
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TodoList'
+        '400':
+          description: Requête invalide
+
+
+
+
 components:
   schemas:
-    Message:
+    Todo:
       type: object
       properties:
-        txt:
+        id:
+          type: integer
+          format: int64
+          examples: [10, 1]
+        title:
           type: string
-          examples: ["voici un exemple"]
+          examples: ["mon todo"]
+        description:
+          type: string
+          examples: ["je dois terminer mon TP de Web pour le prochain TP"]
+        categories:
+          type: array
+          items:
+            type: string
+            examples: ["WORK"]
+
+    TodoInput:
+      type: object
+      properties:
+        title:
+          type: string
+          examples: ["mon todo"]
+        description:
+          type: string
+          examples: ["je dois terminer mon TP de Web pour le prochain TP"]
+        categories:
+          type: array
+          items:
+            type: string
+            examples: ["WORK"]
+
+
+
+    TodoList:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        description:
+          type: string
+        todos:
+          type: array
+          items:
+            $ref: '#/components/schemas/Todo'
+
+    TodoListInput:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
