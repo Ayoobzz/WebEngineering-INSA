@@ -19,7 +19,12 @@ public class TodoControllerV1 {
     private TodoServiceV1 todoService;
     private final Map<Long, Todo> todos = new HashMap<>();
     private long cpt = 0;
-
+    public TodoControllerV1() {
+        Todo todo1 = new Todo(1,"tp web");
+        Todo todo2 = new Todo(2,"tp java");
+        todos.put(todo1.getId(), todo1);
+        todos.put(todo2.getId(), todo2);
+    }
 
     @GetMapping(path="/v1/public/todo/todo/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public Todo getTodo(@PathVariable long id) {

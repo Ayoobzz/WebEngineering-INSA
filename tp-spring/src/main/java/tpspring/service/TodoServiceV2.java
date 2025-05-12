@@ -13,7 +13,7 @@ public class TodoServiceV2 {
     private TodoCrudRepository repository;
 
     public Todo addTodo(final Todo todo) {
-        return repository.save(todo); // ID généré automatiquement
+        return repository.save(todo);
     }
 
     public boolean replaceTodo(final Todo newTodo) {

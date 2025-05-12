@@ -5,20 +5,17 @@ import java.util.List;
 
 import lombok.*;
 import jakarta.persistence.*;
-
+@Entity
 public class TodoList {
 	@Getter
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	private String name;
-	@OneToMany(mappedBy = "todoList", cascade = CascadeType.ALL, orphanRemoval = true)
+	@OneToMany(mappedBy = "list", cascade = CascadeType.ALL)
 	private List<Todo> todos;
 	private String owner;
 
-	/**
-	 * Default constructor
-	 */
 	public TodoList() {
 		super();
 		todos = new ArrayList<>();
@@ -49,6 +46,12 @@ public class TodoList {
 	public List<Todo> getTodos() {
 		return todos;
 	}
+
+	public Long getId(){
+		return id;
+	}
+
+
 
 
 }
